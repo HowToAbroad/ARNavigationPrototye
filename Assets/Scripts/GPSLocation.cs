@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 public class GPSLocation : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class GPSLocation : MonoBehaviour
     public TextMeshProUGUI latitudeValue;
     public TextMeshProUGUI longitudeValue;
     public TextMeshProUGUI altitudeValue;
-    public TextMeshProUGUI horizontalAccuracyValue;
     public TextMeshProUGUI timestampValue;
 
 
@@ -18,6 +18,7 @@ public class GPSLocation : MonoBehaviour
     void Start()
     {
         StartCoroutine(GPSLoc());
+        UpdateGPSData();
     }
     IEnumerator GPSLoc()
     {
@@ -66,7 +67,6 @@ public class GPSLocation : MonoBehaviour
                 latitudeValue.text = Input.location.lastData.latitude.ToString();
                 longitudeValue.text = Input.location.lastData.longitude.ToString();
                 altitudeValue.text = Input.location.lastData.altitude.ToString();
-                horizontalAccuracyValue.text = Input.location.lastData.horizontalAccuracy.ToString();
                 timestampValue.text = Input.location.lastData.timestamp.ToString();
             }
             else 
@@ -76,14 +76,31 @@ public class GPSLocation : MonoBehaviour
             }
         } // end of UpdateGPSData
 
-    
+    // create and write to text file ********
+    void CreateText() {
+        // path of the file
+        string path = Application.dataPath + "/Log.txt";
+        // create file if it doesn't exist
+        if (!File.Exists(path)) {
+            File.WriteAllText(path, "Location tracker \n\n");
+        }
+        // content of file
+        string content = "Login date: " + System.DateTime.Now + "\n" + "Location data: " + latitudeValue.text + "," + longitudeValue.text + "\n";
+        // add some text to ot
+        File.AppendAllText(path, content);
 
-        
-    
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
+    
+
+        // button
+
+    public void OnButtonClick() 
+    {
+        CreateText();
+    }
+
+    void Update() {
+        UpdateGPSData();
+    }
+
 }
