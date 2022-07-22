@@ -13,15 +13,52 @@ public class GPSLocation : MonoBehaviour
     public TextMeshProUGUI altitudeValue;
     public TextMeshProUGUI timestampValue;
 
-
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(GPSLoc());
         UpdateGPSData();
     }
+
+    List<string> GPSDataList = new List<string>();
+    class GPSLocationData {
+        string Coordinates{get; set;}
+        int Id{get; set;}
+        void GPSDataList(string Coordinates, int Id)
+        {}
+    }
+
+    void setLocationData(string coordinates_pass, int id_pass)
+    {
+        string Coordinates A = new Coordinates(coordinates_pass, id_pass);
+        GPSDataList.add(A);
+    }
+
+    /* void GPSLoc() 
+    {
+        setLocationData(Coordinates, id);
+    } */
+    //stop 
+    void stop()
+    {
+        foreach (var i in GPSDataList) 
+        {
+            string path = Application.dataPath + "/Log.txt";
+            // create file if it doesn't exist
+            if (!File.Exists(path)) {
+                File.WriteAllText(path, "Location tracker \n\n");
+            }
+                string content = i.Coordinates + i.id + "\n"; 
+                File.AppendAllText(path, content);
+        }
+    }
+    
+
     IEnumerator GPSLoc()
     {
+
+        setLocationData(coordinates, id);
+
         // check if user has location service enabled
         if (!Input.location.isEnabledByUser)
             yield break;
@@ -77,7 +114,7 @@ public class GPSLocation : MonoBehaviour
         } // end of UpdateGPSData
 
     // create and write to text file ********
-    void CreateText() {
+    /* void CreateText() {
         // path of the file
         string path = Application.dataPath + "/Log.txt";
         // create file if it doesn't exist
@@ -89,14 +126,12 @@ public class GPSLocation : MonoBehaviour
         // add some text to ot
         File.AppendAllText(path, content);
 
-    }
-    
+    } */
 
-        // button
 
     public void OnButtonClick() 
     {
-        CreateText();
+        GPSLoc();
     }
 
     void Update() {
