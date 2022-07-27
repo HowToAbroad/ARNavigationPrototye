@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using static GPSLocationData;  
 
 public class GPSLocation : MonoBehaviour
 {
@@ -18,51 +21,44 @@ public class GPSLocation : MonoBehaviour
     {
         StartCoroutine(GPSLoc());
         UpdateGPSData();
+        CreateText();
     }
 
-    List<string> GPSDataList = new List<string>();
-    class GPSLocationData {
-        string Coordinates{get; set;}
-        int Id{get; set;}
-        void GPSDataList(string Coordinates, int Id)
-        {}
+    List<GPSLocationData> GPSDataList = new List<GPSLocationData>();
+    
+    void setLocationData()
+    {
+        GPSLocationData obj= new GPSLocationData(float.Parse(latitudeValue.text),float.Parse(longitudeValue.text) );
+        GPSDataList.Add(obj);
     }
 
-    void setLocationData(string coordinates_pass, int id_pass)
+    void CreateText()
     {
-        string Coordinates A = new Coordinates(coordinates_pass, id_pass);
-        GPSDataList.add(A);
-    }
-
-    /* void GPSLoc() 
-    {
-        setLocationData(Coordinates, id);
-    } */
-    //stop 
-    void stop()
-    {
-        foreach (var i in GPSDataList) 
-        {
-            string path = Application.dataPath + "/Log.txt";
+        string path = Application.dataPath + "/Log.txt";
             // create file if it doesn't exist
             if (!File.Exists(path)) {
                 File.WriteAllText(path, "Location tracker \n\n");
             }
-                string content = i.Coordinates + i.id + "\n"; 
-                File.AppendAllText(path, content);
+        foreach (var i in GPSDataList) 
+        {
+            string content = latitudeValue + "," + longitudeValue + "\n" + timestampValue + "\n"; 
+            File.AppendAllText(path, content);      
         }
+
+        string[] textFromFile = File.ReadAllLines(path);
+            foreach (string line in textFromFile)
+            {   
+                Console.WriteLine(line);
+            }   
     }
     
 
     IEnumerator GPSLoc()
     {
 
-        setLocationData(coordinates, id);
-
         // check if user has location service enabled
         if (!Input.location.isEnabledByUser)
             yield break;
-        
         // start the location service
         Input.location.Start();
 
@@ -105,6 +101,7 @@ public class GPSLocation : MonoBehaviour
                 longitudeValue.text = Input.location.lastData.longitude.ToString();
                 altitudeValue.text = Input.location.lastData.altitude.ToString();
                 timestampValue.text = Input.location.lastData.timestamp.ToString();
+                setLocationData();
             }
             else 
             {
@@ -113,22 +110,7 @@ public class GPSLocation : MonoBehaviour
             }
         } // end of UpdateGPSData
 
-    // create and write to text file ********
-    /* void CreateText() {
-        // path of the file
-        string path = Application.dataPath + "/Log.txt";
-        // create file if it doesn't exist
-        if (!File.Exists(path)) {
-            File.WriteAllText(path, "Location tracker \n\n");
-        }
-        // content of file
-        string content = "Login date: " + System.DateTime.Now + "\n" + "Location data: " + latitudeValue.text + "," + longitudeValue.text + "\n";
-        // add some text to ot
-        File.AppendAllText(path, content);
-
-    } */
-
-
+    
     public void OnButtonClick() 
     {
         GPSLoc();
