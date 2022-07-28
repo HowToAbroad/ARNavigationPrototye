@@ -5,7 +5,7 @@ using UnityEngine;
 public class GPSLocationData : MonoBehaviour
 {
 
-    List<GPSLocationData> GPSDataList = new List<GPSLocationData>();
+    //List<GPSLocationData> GPSDataList = new List<GPSLocationData>();
 
         public float latitudeValue{get; set;}
         public float longitudeValue{get;set;}

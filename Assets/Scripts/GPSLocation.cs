@@ -30,32 +30,39 @@ public class GPSLocation : MonoBehaviour
     {
         GPSLocationData obj= new GPSLocationData(float.Parse(latitudeValue.text),float.Parse(longitudeValue.text) );
         GPSDataList.Add(obj);
-    }
+    } 
 
     void CreateText()
     {
-        string path = Application.dataPath + "/Log.txt";
+        string path = Application.dataPath + "/locationLog.txt"; 
             // create file if it doesn't exist
             if (!File.Exists(path)) {
                 File.WriteAllText(path, "Location tracker \n\n");
+                return;
             }
-        foreach (var i in GPSDataList) 
-        {
-            string content = latitudeValue + "," + longitudeValue + "\n" + timestampValue + "\n"; 
-            File.AppendAllText(path, content);      
-        }
+            // content of file
+            string content = "Login date: " + System.DateTime.Now + "\n" + "Location data: " + latitudeValue.text + "," + longitudeValue.text + "\n";
+            //GPSDataList = content.ToString();
+            File.AppendAllText(path, content);
+
+            setLocationData();
 
         string[] textFromFile = File.ReadAllLines(path);
             foreach (string line in textFromFile)
             {   
-                Console.WriteLine(line);
-            }   
+                Debug.Log(line);
+            }               
+
+        foreach (var i in GPSDataList) 
+        {
+            //string content = latitudeValue + "," + longitudeValue + "\n" + timestampValue + "\n"; 
+            File.AppendAllText(path, content);  
+        } 
     }
     
 
     IEnumerator GPSLoc()
     {
-
         // check if user has location service enabled
         if (!Input.location.isEnabledByUser)
             yield break;
@@ -101,7 +108,7 @@ public class GPSLocation : MonoBehaviour
                 longitudeValue.text = Input.location.lastData.longitude.ToString();
                 altitudeValue.text = Input.location.lastData.altitude.ToString();
                 timestampValue.text = Input.location.lastData.timestamp.ToString();
-                setLocationData();
+                //setLocationData();
             }
             else 
             {

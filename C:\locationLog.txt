@@ -1,0 +1,14 @@
+Location tracker 
+
+Login date: 7/28/2022 10:31:02 AM
+Location data: 00,00
+Login date: 7/28/2022 10:31:02 AM
+Location data: 00,00
+Login date: 7/28/2022 10:31:23 AM
+Location data: 00,00
+Login date: 7/28/2022 10:31:23 AM
+Location data: 00,00
+Login date: 7/28/2022 10:57:46 AM
+Location data: 00,00
+Login date: 7/28/2022 10:57:46 AM
+Location data: 00,00
